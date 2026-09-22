@@ -1,0 +1,28 @@
+version: "1.0"
+service:
+  name: "max-counterparty-scoring"
+  title: "MAX Business Counterparty Scoring API"
+  description: "Сервис скоринга и проверки благонадежности контрагентов для платформы MAX"
+  type: "rest-api"
+  version: "1.0.0"
+
+deployment:
+  port: 8000
+  docker:
+    compose_file: "docker-compose.yml"
+    service_name: "backend"
+
+endpoints:
+  - path: "/health"
+    method: "GET"
+    description: "Проверка работоспособности сервиса"
+    expected_status: 200
+
+  - path: "/api/v1/counterparty/check"
+    method: "POST"
+    description: "Скоринг контрагента по ИНН/ОГРН"
+    headers:
+      Content-Type: "application/json"
+    body:
+      query: "7707083893"
+    expected_status: 200
