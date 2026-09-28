@@ -17,12 +17,10 @@ BOT_TOKEN = os.getenv("MAX_BOT_TOKEN", "")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-
     polling_task = None
     if BOT_TOKEN:
         polling_task = asyncio.create_task(run_bot_polling(BOT_TOKEN))
     yield
-
     if polling_task:
         polling_task.cancel()
 
@@ -36,7 +34,12 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://max-bot-hackathon.vercel.app",
+        "http://localhost:5173",
+        "http://localhost:8080",
+        "*",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -61,5 +64,4 @@ def check_counterparty(req: CounterpartyCheckRequest):
             status_code=400,
             detail="Некорректный формат ИНН/ОГРН. Ожидается от 10 до 15 цифр.",
         )
-
     return get_counterparty_data(inn)
